@@ -166,8 +166,9 @@ public class BOBOTSROBOTS extends OpMode
     }
 
     /*
-     * Code to run ONCE after the driver hits STOP
+     * Code to run ONCE after the drives hits STOP
      */
+
     @Override
     public void stop() {
         BL.setPower(0);
