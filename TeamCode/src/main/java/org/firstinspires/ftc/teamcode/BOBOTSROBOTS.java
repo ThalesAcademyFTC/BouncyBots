@@ -166,7 +166,7 @@ public class BOBOTSROBOTS extends OpMode
     }
 
     /*
-     * Code to run ONCEs after the drives hits STOP
+     * Code to run ONCE after the drives hits STOP
      */
 
     @Override
