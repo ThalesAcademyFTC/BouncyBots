@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -52,12 +53,19 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name="Basic: Iterative OpMode", group="Iterative OpMode")
 public class BOBOTSROBOTS extends OpMode
 {
+    public enum Drivetrain {
+
+        BOBOTSROBOTS,
+    }
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor FR = null;
     private DcMotor FL = null;
     private DcMotor BL = null;
     private DcMotor BR = null;
+    private Drivetrain drive;
+    public static final double Y_INCH_TICKS = 45;
+    private DcMotorEx allDriveMotors[]={} ;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -176,6 +184,42 @@ public class BOBOTSROBOTS extends OpMode
         FR.setPower(0);
         FL.setPower(0);
     }
+    public void move(double x, double y, double turn) {
+        double denominator;
+        double FLPower;
+        double BLPower;
+        double FRPower;
+        double BRPower;
+
+        switch (drive) {
+            case BOBOTSROBOTS:
+                denominator = Math.max(Math.abs (y) + Math.abs(x) + Math.abs(turn), 1);
+                FLPower = (y + x + turn) / denominator;
+                FRPower = (y - x - turn) / denominator;
+                BLPower = (y - x + turn) / denominator;
+                BRPower = (y + x - turn) / denominator;
+
+                FL.setPower(FLPower);
+                FR.setPower(FRPower);
+                BL.setPower(BLPower);
+                BR.setPower(BRPower);
+
+
+        }
+
+    }
+    public void moveFowardInches(double inches, double speed) {
+        int tickTarget = (int) Math.round(inches * Y_INCH_TICKS);
+
+        for (DcMotor x : allDriveMotors) {
+            x.setTargetPosition(tickTarget);
+        }
+        move(0, speed,0);
+    }
+    public void moveBackwardInches(double inches, double speed) {
+        moveFowardInches(-inches, -speed);
+    }
+
 
 }
 
